@@ -1,6 +1,6 @@
 -module(eclock).
 
--export([run_interval/3, spawn_interval/2, loop/2, stop/1 ,test/0, test2/0]).
+-export([run_interval/3, spawn_interval/2, loop/2, stop/1 ,test/0, test2/0, test3/0]).
 
 run_interval(_Task, _Interval, 0) ->
 	ok;
@@ -17,7 +17,12 @@ loop(Task, Interval) ->
 		stop ->
 			ok
 	after Interval*1000 ->
-		Task(),
+		try
+			Task()
+		catch
+			Type:Error ->
+				error_logger:error_report([{Type, Error}])
+		end,
 		loop(Task, Interval)
 	end.
 
@@ -29,5 +34,9 @@ test() ->
 
 test2() ->
 	io:format("second process~n").
+
+test3() ->
+	Res = 1/(random:uniform(2) - 1),
+	io:format("test3 working ~p~n", [Res]).
 
 
