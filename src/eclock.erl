@@ -38,5 +38,3 @@ test2() ->
 test3() ->
 	Res = 1/(random:uniform(2) - 1),
 	io:format("test3 working ~p~n", [Res]).
-
-
