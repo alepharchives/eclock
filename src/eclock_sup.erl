@@ -2,9 +2,11 @@
 
 -export([start/0, spawn_interval/2, loop/1]).
 
+-spec start() -> true.
 start() ->
 	register(?MODULE,spawn(?MODULE, loop, [[]])).
 
+-spec loop([]|list({pid(), fun(()-> any()), non_neg_integer()})) ->  no_return().
 loop(Eclocks) ->
 	process_flag(trap_exit, true),
 	receive
@@ -28,6 +30,7 @@ loop(Eclocks) ->
 	
 	loop(NewEclocks).
 
+-spec spawn_interval(fun(()-> any()), non_neg_integer()) -> pid().
 spawn_interval(Task, Interval) ->
 	?MODULE ! {spawn_interval, Task, Interval, self()},
 	receive
