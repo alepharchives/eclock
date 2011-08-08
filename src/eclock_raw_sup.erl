@@ -11,7 +11,7 @@ loop(Eclocks) ->
 	process_flag(trap_exit, true),
 	receive
 		{spawn_interval, Task, Interval, From} ->
-			link(Pid = eclock:spawn_interval(Task, Interval)),
+			link(Pid = eclock_raw:spawn_interval(Task, Interval)),
 			From ! Pid,
 			NewEclocks = [{Pid, Task, Interval}|Eclocks];
 		{'EXIT',_,normal} ->
@@ -22,7 +22,7 @@ loop(Eclocks) ->
 							 false ->
 								 Eclocks;
 							 {FromPid, Task,Interval} ->
-								 link(Pid = eclock:spawn_interval(Task, Interval)),
+								 link(Pid = eclock_raw:spawn_interval(Task, Interval)),
 								 io:format("Creating new process...~n"),
 								 [{Pid, Task, Interval}|Eclocks]
 						 end

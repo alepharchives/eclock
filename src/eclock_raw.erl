@@ -1,4 +1,4 @@
--module(eclock).
+-module(eclock_raw).
 
 -export([run_interval/3, spawn_interval/2, loop/2, stop/1 ,test/0, test2/0, test3/0]).
 
