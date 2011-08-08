@@ -1,4 +1,4 @@
--module(eclock_sup).
+-module(eclock_raw_sup).
 
 -export([start/0, spawn_interval/2, loop/1]).
 
