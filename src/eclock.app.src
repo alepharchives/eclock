@@ -1,0 +1,15 @@
+{application, eclock,
+ [
+  {description, "Yet another logging library for Erlang"},
+  {vsn, "2.5"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  inets,
+                  crypto,
+                  ssl
+                 ]},
+  {mod, {eclock, []}},
+  {env, []}
+ ]}.
