@@ -45,7 +45,7 @@ start_server(Task,Interval) ->
 %%          {error, Reason}
 %% --------------------------------------------------------------------
 init([]) ->
-	Child = {eclock_server,{eclock_server, start_link,[]},permanent,2000,worker,[eclock_server]},
+	Child = {eclock_server,{eclock_server, start_link,[]},transient,2000,worker,[eclock_server]},
 	{ok,{{simple_one_for_one,2,10000}, [Child]}}.
 
 %% ====================================================================

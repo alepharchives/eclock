@@ -23,8 +23,8 @@
 %% ====================================================================
 %% External functions
 %% ====================================================================
-start_link(Taskk,Interval) ->
-	gen_server:start_link(?MODULE,[Taskk, Interval], []).
+start_link(Task,Interval) ->
+	gen_server:start_link(?MODULE,[Task, Interval], []).
 
 stop(Pid) ->
 	gen_server:cast(Pid, stop).

@@ -12,7 +12,8 @@
 %% Behavioural exports
 %% --------------------------------------------------------------------
 -export([start/2, stop/1]).
--export([start/0,  spawn_interval/2]).
+-export([start/0,  stop/0]).
+-export([start_clock/2, stop_clock/1]).
 
 %% --------------------------------------------------------------------
 %% Internal exports
@@ -33,8 +34,15 @@
 start() ->
 	application:start(?MODULE).
 
-spawn_interval(Task,Interval) ->
-	ok.
+stop() ->
+	application:stop(?MODULE).
+
+start_clock(Task, Interval) ->
+	eclock_sup:start_server(Task, Interval).
+
+stop_clock(Pid) ->
+	eclock_server:stop(Pid).
+
 
 %% ====================================================================!
 %% External functions
@@ -46,7 +54,7 @@ spawn_interval(Task,Interval) ->
 %%          {error, Reason}
 %% --------------------------------------------------------------------
 start(normal, StartArgs) ->
-    eclock_sup:start_link([]).
+    eclock_sup:start_link().
     
 %% --------------------------------------------------------------------
 %% Func: stop/1
