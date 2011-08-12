@@ -18,7 +18,7 @@
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
--record(state, {task, timeout, executed_times=0}).
+-record(state, {id, task, timeout, executed_times=0}).
 
 %% ====================================================================
 %% External functions
@@ -26,9 +26,14 @@
 start_link(Task,Interval) ->
 	gen_server:start_link(?MODULE,[Task, Interval], []).
 
-stop(Pid) ->
-	gen_server:cast(Pid, stop).
-
+stop(Pid) when is_pid(Pid) -> 
+	gen_server:cast(Pid, stop);
+stop(Id) ->	
+	case eclock_db:lookup(Id) of 
+		not_found -> throw({not_found, Id});
+		{Pid, _, _} -> stop(Pid)
+	end.
+					 
 %% ====================================================================
 %% Server functions
 %% ====================================================================
@@ -42,7 +47,8 @@ stop(Pid) ->
 %%          {stop, Reason}
 %% --------------------------------------------------------------------
 init([Task, Timeout]) ->
-    {ok, #state{task=Task, timeout=Timeout*1000},Timeout*1000}.
+	Id = eclock_db:insert({self(), Task,Timeout}),
+    {ok, #state{id=Id,task=Task,timeout=Timeout*1000},Timeout*1000}.
 
 %% --------------------------------------------------------------------
 %% Function: handle_call/3
@@ -67,6 +73,7 @@ handle_call(Request, From, State) ->
 %% --------------------------------------------------------------------
 handle_cast(stop, State) ->
 	io:format("The task was executed ~p times.~n", [State#state.executed_times]),
+	eclock_db:delete(State#state.id),
     {stop, normal, State}.
 
 %% --------------------------------------------------------------------
@@ -108,4 +115,3 @@ code_change(OldVsn, State, Extra) ->
 %% --------------------------------------------------------------------
 %%% Internal functions
 %% --------------------------------------------------------------------
-

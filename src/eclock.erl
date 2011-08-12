@@ -40,9 +40,8 @@ stop() ->
 start_clock(Task, Interval) ->
 	eclock_sup:start_server(Task, Interval).
 
-stop_clock(Pid) ->
-	eclock_server:stop(Pid).
-
+stop_clock(Clock) ->
+	eclock_server:stop(Clock).
 
 %% ====================================================================!
 %% External functions
@@ -54,7 +53,8 @@ stop_clock(Pid) ->
 %%          {error, Reason}
 %% --------------------------------------------------------------------
 start(normal, StartArgs) ->
-    eclock_sup:start_link().
+	eclock_db:start(),
+	eclock_sup:start_link().
     
 %% --------------------------------------------------------------------
 %% Func: stop/1
